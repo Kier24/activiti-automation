@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
+		http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
+	targetNamespace="mdf_sdf">
+	
+	<process id="processMdfAndSdf" name="Process MDF and SDF">
+		<startEvent id="start"/>
+		
+		<sequenceFlow targetRef="processMdf" sourceRef="start"/>
+		
+		<serviceTask id="processMdf" name="Process MDF" activiti:type="shell">
+			<extensionElements>
+				<activiti:field name="command" stringValue="sh"/>
+				<activiti:field name="arg1">
+					<activiti:expression>${mdfDirectory}/createMDF.sh</activiti:expression>
+				</activiti:field>
+			</extensionElements>
+		</serviceTask>
+		
+		<sequenceFlow targetRef="processSdf" sourceRef="processMdf"/>
+		
+		<serviceTask id="processSdf" name="Process SDF" activiti:type="shell">
+			<extensionElements>
+				<activiti:field name="command" stringValue="sh"/>
+				<activiti:field name="arg1">
+					<activiti:expression>${stopfileDirectory}/importStopFile.sh</activiti:expression>
+				</activiti:field>
+			</extensionElements>
+		</serviceTask>
+		
+		<sequenceFlow targetRef="end" sourceRef="processSdf"/>
+		
+		<endEvent id="end"/>
+	</process>
+	
+</definitions>
