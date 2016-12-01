@@ -5,13 +5,13 @@ import org.activiti.engine.delegate.JavaDelegate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DownloadEPFileDelegate implements JavaDelegate {
+public class CreateMCOutgoingDelegate implements JavaDelegate {
 	
-	private static final Log LOGGER = LogFactory.getLog(DownloadEPFileDelegate.class);
+	private static final Log LOGGER = LogFactory.getLog(CreateMCOutgoingDelegate.class);
 
 	@Override
 	public void execute(DelegateExecution execution) throws Exception {
-		LOGGER.info("Execution process [VISA Incoming / Download EP File]...");
+		LOGGER.info("Execution process [MC Outgoing]...");
 	}
 
 }

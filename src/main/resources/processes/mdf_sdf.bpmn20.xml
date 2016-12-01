@@ -7,23 +7,53 @@
 		http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
 	targetNamespace="mdf_sdf">
 	
-	<process id="runDailyBatch" name="Process MDF and SDF">
+	<process id="dailyBatch" name="Run Daily Batch">
 		<startEvent id="start">
 			<timerEventDefinition>
 				<timeCycle>0 * * * * ?</timeCycle>
 			</timerEventDefinition>
 		</startEvent>
-		
-		<sequenceFlow targetRef="reports" sourceRef="start"/>
-		
+		<sequenceFlow sourceRef="start" targetRef="reports"/>
 		<serviceTask id="reports" name="Reports" activiti:class="com.smi.efs.activiti.delegate.ReportsDelegate"/>
-		
-		<sequenceFlow targetRef="downloadEPFile" sourceRef="reports"/>
-		
-		<serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:class="com.smi.efs.activiti.delegate.DownloadEPFileDelegate"/>
-		
-		<sequenceFlow targetRef="end" sourceRef="downloadEPFile"/>
-		
+		<sequenceFlow sourceRef="reports" targetRef="downloadEPFile"/>
+		<serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:class="com.smi.efs.activiti.delegate.DownloadVISAIncomingDelegate"/>
+		<sequenceFlow sourceRef="downloadEPFile" targetRef="incomingEditRun"/>
+		<serviceTask id="incomingEditRun" name="VISA Incoming / Incoming Edit Run" activiti:class="com.smi.efs.activiti.delegate.IncomingEditRunDelegate"/>
+		<sequenceFlow sourceRef="incomingEditRun" targetRef="extractBINAndARDEF"/>
+		<serviceTask id="extractBINAndARDEF" name="Extract BIN and ARDEF" activiti:class="com.smi.efs.activiti.delegate.ExtractBINAndARDEFDelegate"/>
+		<sequenceFlow sourceRef="extractBINAndARDEF" targetRef="processBINAndARDEF"/>
+		<serviceTask id="processBINAndARDEF" name="Process BIN and ARDEF" activiti:class="com.smi.efs.activiti.delegate.ProcessBINAndARDEFDelegate"/>
+		<sequenceFlow sourceRef="processBINAndARDEF" targetRef="updateEPIN"/>
+		<serviceTask id="updateEPIN" name="Update EPIN	" activiti:class="com.smi.efs.activiti.delegate.UpdateEPINDelegate"/>
+		<sequenceFlow sourceRef="updateEPIN" targetRef="processEPIN"/>
+		<serviceTask id="processEPIN" name="Processing of EPIN" activiti:class="com.smi.efs.activiti.delegate.ProcessEPINDelegate"/>
+		<sequenceFlow sourceRef="processEPIN" targetRef="downloadMCIncoming"/>
+		<serviceTask id="downloadMCIncoming" name="Download MC Incoming" activiti:class="com.smi.efs.activiti.delegate.DownloadMCIncomingDelegate"/>
+		<sequenceFlow sourceRef="downloadMCIncoming" targetRef="processMCIncoming"/>
+		<serviceTask id="processMCIncoming" name="Process MC Incoming" activiti:class="com.smi.efs.activiti.delegate.ProcessMCIncomingDelegate"/>
+		<sequenceFlow sourceRef="processMCIncoming" targetRef="uploadCurrencyConversionRate"/>
+		<serviceTask id="uploadCurrencyConversionRate" name="Currency Conversion Rate Upload" activiti:class="com.smi.efs.activiti.delegate.UploadCurrencyConversionRateDelegate"/>
+		<sequenceFlow sourceRef="uploadCurrencyConversionRate" targetRef="loadMFSBIN"/>
+		<serviceTask id="loadMFSBIN" name="MFS BIN Loading" activiti:class="com.smi.efs.activiti.delegate.LoadMFSBINDelegate"/>
+		<sequenceFlow sourceRef="loadMFSBIN" targetRef="createDCF"/>
+		<serviceTask id="createDCF" name="DCF / TS10" activiti:class="com.smi.efs.activiti.delegate.CreateDCFDelegate"/>
+		<sequenceFlow sourceRef="createDCF" targetRef="createEPOS"/>
+		<serviceTask id="createEPOS" name="Merch Batch EPOS" activiti:class="com.smi.efs.activiti.delegate.CreateEPOSDelegate"/>
+		<sequenceFlow sourceRef="createEPOS" targetRef="runDailyBatch"/>
+		<serviceTask id="runDailyBatch" name="Daily Batch" activiti:class="com.smi.efs.activiti.delegate.RunDailyBatchDelegate"/>
+		<sequenceFlow sourceRef="runDailyBatch" targetRef="createMCOutgoing"/>
+		<serviceTask id="createMCOutgoing" name="MC Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateMCOutgoingDelegate"/>
+		<sequenceFlow sourceRef="createMCOutgoing" targetRef="runR111Editor"/>
+		<serviceTask id="runR111Editor" name="R111 Editor" activiti:class="com.smi.efs.activiti.delegate.RunR111EditorDelegate"/>
+		<sequenceFlow sourceRef="runR111Editor" targetRef="createVISAOutgoing"/>
+		<serviceTask id="createVISAOutgoing" name="VISA Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateVISAOutgoingDelegate"/>
+		<sequenceFlow sourceRef="createVISAOutgoing" targetRef="uploadR111"/>
+		<serviceTask id="uploadR111" name="R111 Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadR111Delegate"/>
+		<sequenceFlow sourceRef="uploadR111" targetRef="uploadEPBIIOUT"/>
+		<serviceTask id="uploadEPBIIOUT" name="EPBIIOUT Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadEPBIIOUTDelegate"/>
+		<sequenceFlow sourceRef="uploadEPBIIOUT" targetRef="processBOSSettlementReports"/>
+		<serviceTask id="processBOSSettlementReports" name="BOS Settlement Reports" activiti:class="com.smi.efs.activiti.delegate.ProcessBOSSettlementReportsDelegate"/>
+		<sequenceFlow sourceRef="processBOSSettlementReports" targetRef="end"/>
 		<endEvent id="end"/>
 	</process>
 	
