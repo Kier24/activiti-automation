@@ -7,32 +7,22 @@
 		http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
 	targetNamespace="mdf_sdf">
 	
-	<process id="processMdfAndSdf" name="Process MDF and SDF">
-		<startEvent id="start"/>
+	<process id="runDailyBatch" name="Process MDF and SDF">
+		<startEvent id="start">
+			<timerEventDefinition>
+				<timeCycle>0 * * * * ?</timeCycle>
+			</timerEventDefinition>
+		</startEvent>
 		
-		<sequenceFlow targetRef="processMdf" sourceRef="start"/>
+		<sequenceFlow targetRef="reports" sourceRef="start"/>
 		
-		<serviceTask id="processMdf" name="Process MDF" activiti:type="shell">
-			<extensionElements>
-				<activiti:field name="command" stringValue="sh"/>
-				<activiti:field name="arg1">
-					<activiti:expression>${mdfDirectory}/createMDF.sh</activiti:expression>
-				</activiti:field>
-			</extensionElements>
-		</serviceTask>
+		<serviceTask id="reports" name="Reports" activiti:class="com.smi.efs.activiti.delegate.ReportsDelegate"/>
 		
-		<sequenceFlow targetRef="processSdf" sourceRef="processMdf"/>
+		<sequenceFlow targetRef="downloadEPFile" sourceRef="reports"/>
 		
-		<serviceTask id="processSdf" name="Process SDF" activiti:type="shell">
-			<extensionElements>
-				<activiti:field name="command" stringValue="sh"/>
-				<activiti:field name="arg1">
-					<activiti:expression>${stopfileDirectory}/importStopFile.sh</activiti:expression>
-				</activiti:field>
-			</extensionElements>
-		</serviceTask>
+		<serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:class="com.smi.efs.activiti.delegate.DownloadEPFileDelegate"/>
 		
-		<sequenceFlow targetRef="end" sourceRef="processSdf"/>
+		<sequenceFlow targetRef="end" sourceRef="downloadEPFile"/>
 		
 		<endEvent id="end"/>
 	</process>
