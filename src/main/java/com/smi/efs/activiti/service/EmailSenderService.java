@@ -1,7 +1,8 @@
 package com.smi.efs.activiti.service;
 
+import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -40,15 +41,39 @@ public class EmailSenderService {
 
 		javaMailSender.send(message);
 	}
+	
+	public void sendEmailWithAttachment(String subject, String body, String sender, String receivers, File attachment) throws MessagingException {
+		this.subject = subject;
+		this.body = body;
+		this.sender = sender;
+		this.receivers = receivers;
+		validateFields();
+		Validate.isTrue(Files.exists(attachment.toPath()), "File to attach does not exist: " + attachment);
+		
+		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+		
+		helper.setFrom(sender);
+		helper.setTo(receivers.split(","));
+		helper.setSubject(subject);
+		helper.setText(body);
+		
+		// @formatter:off
+		helper.addAttachment(
+				attachment.getName(),
+				new FileSystemResource(attachment));
+		// @formatter:on
+		
+		javaMailSender.send(mimeMessage);
+	}
 
-	public void sendEmailWithAttachment(String subject, String body, String sender, String receivers, Path attachment)
+	public void sendEmailWithAttachment(String subject, String body, String sender, String receivers, List<File> attachments)
 			throws MessagingException {
 		this.subject = subject;
 		this.body = body;
 		this.sender = sender;
 		this.receivers = receivers;
 		validateFields();
-		Validate.isTrue(Files.exists(attachment), "File to attach does not exist: " + attachment);
 
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -58,9 +83,10 @@ public class EmailSenderService {
 		helper.setSubject(subject);
 		helper.setText(body);
 
-		// @formatter:off
-		helper.addAttachment(attachment.getFileName().toString(), new FileSystemResource(attachment.toFile()));
-		// @formatter:on
+		for(File attachment : attachments) {
+			Validate.isTrue(Files.exists(attachment.toPath()), "File to attach does not exist: " + attachment);
+			helper.addAttachment(attachment.getName(), new FileSystemResource(attachment));
+		}
 
 		javaMailSender.send(mimeMessage);
 	}

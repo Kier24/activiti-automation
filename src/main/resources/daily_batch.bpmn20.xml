@@ -14,7 +14,7 @@
 			</timerEventDefinition>
 		</startEvent>
 		<sequenceFlow sourceRef="start" targetRef="reports"/>
-		<serviceTask id="reports" name="Reports" activiti:class="com.smi.efs.activiti.delegate.ReportsDelegate"/>
+		<serviceTask id="reports" name="Reports" activiti:delegateExpression="${reportsDelegate}"/>
 		<sequenceFlow sourceRef="reports" targetRef="downloadEPFile"/>
 		<serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:class="com.smi.efs.activiti.delegate.DownloadVISAIncomingDelegate"/>
 		<sequenceFlow sourceRef="downloadEPFile" targetRef="incomingEditRun"/>

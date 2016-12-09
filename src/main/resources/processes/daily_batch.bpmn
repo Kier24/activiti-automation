@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="daily_batch" name="Daily Batch Automation" isExecutable="true">
+    <serviceTask id="reports" name="Reports" activiti:async="true" activiti:delegateExpression="${reportsDelegate}"></serviceTask>
+    <serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:async="true" activiti:class="com.smi.efs.activiti.delegate.DownloadVISAIncomingDelegate"></serviceTask>
+    <serviceTask id="incomingEditRun" name="VISA Incoming / Incoming Edit Run" activiti:class="com.smi.efs.activiti.delegate.IncomingEditRunDelegate"></serviceTask>
+    <serviceTask id="extractBINAndARDEF" name="Extract BIN and ARDEF" activiti:class="com.smi.efs.activiti.delegate.ExtractBINAndARDEFDelegate"></serviceTask>
+    <serviceTask id="processBINAndARDEF" name="Process BIN and ARDEF" activiti:class="com.smi.efs.activiti.delegate.ProcessBINAndARDEFDelegate"></serviceTask>
+    <serviceTask id="updateEPIN" name="Update EPIN" activiti:class="com.smi.efs.activiti.delegate.UpdateEPINDelegate"></serviceTask>
+    <serviceTask id="processEPIN" name="Processing of EPIN" activiti:class="com.smi.efs.activiti.delegate.ProcessEPINDelegate"></serviceTask>
+    <serviceTask id="downloadMCIncoming" name="Download MC Incoming" activiti:class="com.smi.efs.activiti.delegate.DownloadMCIncomingDelegate"></serviceTask>
+    <serviceTask id="processMCIncoming" name="Process MC Incoming" activiti:class="com.smi.efs.activiti.delegate.ProcessMCIncomingDelegate"></serviceTask>
+    <serviceTask id="uploadCurrencyConversionRate" name="Currency Conversion Rate Upload" activiti:class="com.smi.efs.activiti.delegate.UploadCurrencyConversionRateDelegate"></serviceTask>
+    <serviceTask id="loadMFSBIN" name="MFS BIN Loading" activiti:class="com.smi.efs.activiti.delegate.LoadMFSBINDelegate"></serviceTask>
+    <serviceTask id="createDCF" name="DCF / TS10" activiti:class="com.smi.efs.activiti.delegate.CreateDCFDelegate"></serviceTask>
+    <serviceTask id="createEPOS" name="Merch Batch EPOS" activiti:class="com.smi.efs.activiti.delegate.CreateEPOSDelegate"></serviceTask>
+    <serviceTask id="runDailyBatch" name="Daily Batch" activiti:class="com.smi.efs.activiti.delegate.RunDailyBatchDelegate"></serviceTask>
+    <serviceTask id="createMCOutgoing" name="MC Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateMCOutgoingDelegate"></serviceTask>
+    <serviceTask id="runR111Editor" name="R111 Editor" activiti:class="com.smi.efs.activiti.delegate.RunR111EditorDelegate"></serviceTask>
+    <serviceTask id="createVISAOutgoing" name="VISA Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateVISAOutgoingDelegate"></serviceTask>
+    <serviceTask id="uploadR111" name="R111 Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadR111Delegate"></serviceTask>
+    <serviceTask id="uploadEPBIIOUT" name="EPBIIOUT Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadEPBIIOUTDelegate"></serviceTask>
+    <serviceTask id="processBOSSettlementReports" name="BOS Settlement Reports" activiti:class="com.smi.efs.activiti.delegate.ProcessBOSSettlementReportsDelegate"></serviceTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow2" sourceRef="reports" targetRef="downloadEPFile"></sequenceFlow>
+    <sequenceFlow id="flow3" sourceRef="downloadEPFile" targetRef="incomingEditRun"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="incomingEditRun" targetRef="extractBINAndARDEF"></sequenceFlow>
+    <sequenceFlow id="flow5" sourceRef="extractBINAndARDEF" targetRef="processBINAndARDEF"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="processBINAndARDEF" targetRef="updateEPIN"></sequenceFlow>
+    <sequenceFlow id="flow7" sourceRef="processEPIN" targetRef="downloadMCIncoming"></sequenceFlow>
+    <sequenceFlow id="flow8" sourceRef="downloadMCIncoming" targetRef="processMCIncoming"></sequenceFlow>
+    <sequenceFlow id="flow9" sourceRef="updateEPIN" targetRef="processEPIN"></sequenceFlow>
+    <sequenceFlow id="flow10" sourceRef="processMCIncoming" targetRef="uploadCurrencyConversionRate"></sequenceFlow>
+    <sequenceFlow id="flow11" sourceRef="uploadCurrencyConversionRate" targetRef="loadMFSBIN"></sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="loadMFSBIN" targetRef="createDCF"></sequenceFlow>
+    <sequenceFlow id="flow13" sourceRef="createDCF" targetRef="createEPOS"></sequenceFlow>
+    <sequenceFlow id="flow14" sourceRef="createEPOS" targetRef="runDailyBatch"></sequenceFlow>
+    <sequenceFlow id="flow15" sourceRef="runDailyBatch" targetRef="createMCOutgoing"></sequenceFlow>
+    <sequenceFlow id="flow16" sourceRef="createMCOutgoing" targetRef="runR111Editor"></sequenceFlow>
+    <sequenceFlow id="flow17" sourceRef="runR111Editor" targetRef="createVISAOutgoing"></sequenceFlow>
+    <sequenceFlow id="flow18" sourceRef="createVISAOutgoing" targetRef="uploadR111"></sequenceFlow>
+    <sequenceFlow id="flow19" sourceRef="uploadR111" targetRef="uploadEPBIIOUT"></sequenceFlow>
+    <sequenceFlow id="flow20" sourceRef="uploadEPBIIOUT" targetRef="processBOSSettlementReports"></sequenceFlow>
+    <sequenceFlow id="flow21" sourceRef="processBOSSettlementReports" targetRef="endevent1"></sequenceFlow>
+    <startEvent id="start" name="Timer start" activiti:async="true">
+      <timerEventDefinition>
+        <timeCycle>0 * * * * ?</timeCycle>
+      </timerEventDefinition>
+    </startEvent>
+    <sequenceFlow id="flow22" sourceRef="start" targetRef="reports"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_daily_batch">
+    <bpmndi:BPMNPlane bpmnElement="daily_batch" id="BPMNPlane_daily_batch">
+      <bpmndi:BPMNShape bpmnElement="reports" id="BPMNShape_reports">
+        <omgdc:Bounds height="65.0" width="105.0" x="201.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="downloadEPFile" id="BPMNShape_downloadEPFile">
+        <omgdc:Bounds height="65.0" width="105.0" x="341.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="incomingEditRun" id="BPMNShape_incomingEditRun">
+        <omgdc:Bounds height="65.0" width="105.0" x="491.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="extractBINAndARDEF" id="BPMNShape_extractBINAndARDEF">
+        <omgdc:Bounds height="65.0" width="105.0" x="641.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processBINAndARDEF" id="BPMNShape_processBINAndARDEF">
+        <omgdc:Bounds height="65.0" width="105.0" x="811.0" y="20.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="updateEPIN" id="BPMNShape_updateEPIN">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processEPIN" id="BPMNShape_processEPIN">
+        <omgdc:Bounds height="55.0" width="105.0" x="330.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="downloadMCIncoming" id="BPMNShape_downloadMCIncoming">
+        <omgdc:Bounds height="55.0" width="105.0" x="480.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processMCIncoming" id="BPMNShape_processMCIncoming">
+        <omgdc:Bounds height="55.0" width="105.0" x="630.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uploadCurrencyConversionRate" id="BPMNShape_uploadCurrencyConversionRate">
+        <omgdc:Bounds height="55.0" width="105.0" x="810.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="loadMFSBIN" id="BPMNShape_loadMFSBIN">
+        <omgdc:Bounds height="55.0" width="105.0" x="150.0" y="212.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createDCF" id="BPMNShape_createDCF">
+        <omgdc:Bounds height="55.0" width="105.0" x="290.0" y="212.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createEPOS" id="BPMNShape_createEPOS">
+        <omgdc:Bounds height="55.0" width="105.0" x="440.0" y="212.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="runDailyBatch" id="BPMNShape_runDailyBatch">
+        <omgdc:Bounds height="55.0" width="105.0" x="590.0" y="212.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createMCOutgoing" id="BPMNShape_createMCOutgoing">
+        <omgdc:Bounds height="55.0" width="105.0" x="760.0" y="212.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="runR111Editor" id="BPMNShape_runR111Editor">
+        <omgdc:Bounds height="55.0" width="105.0" x="88.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createVISAOutgoing" id="BPMNShape_createVISAOutgoing">
+        <omgdc:Bounds height="55.0" width="105.0" x="228.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uploadR111" id="BPMNShape_uploadR111">
+        <omgdc:Bounds height="55.0" width="105.0" x="378.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uploadEPBIIOUT" id="BPMNShape_uploadEPBIIOUT">
+        <omgdc:Bounds height="55.0" width="105.0" x="528.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="processBOSSettlementReports" id="BPMNShape_processBOSSettlementReports">
+        <omgdc:Bounds height="55.0" width="105.0" x="708.0" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="848.0" y="320.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="130.0" y="35.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="306.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="341.0" y="52.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow3" id="BPMNEdge_flow3">
+        <omgdi:waypoint x="446.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="491.0" y="52.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
+        <omgdi:waypoint x="596.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="641.0" y="52.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5">
+        <omgdi:waypoint x="746.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="811.0" y="52.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
+        <omgdi:waypoint x="863.0" y="85.0"></omgdi:waypoint>
+        <omgdi:waypoint x="839.0" y="93.0"></omgdi:waypoint>
+        <omgdi:waypoint x="556.0" y="93.0"></omgdi:waypoint>
+        <omgdi:waypoint x="228.0" y="93.0"></omgdi:waypoint>
+        <omgdi:waypoint x="232.0" y="120.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7">
+        <omgdi:waypoint x="435.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
+        <omgdi:waypoint x="585.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="630.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9">
+        <omgdi:waypoint x="285.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10">
+        <omgdi:waypoint x="735.0" y="147.0"></omgdi:waypoint>
+        <omgdi:waypoint x="810.0" y="147.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11">
+        <omgdi:waypoint x="862.0" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="800.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="541.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="203.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="202.0" y="212.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12">
+        <omgdi:waypoint x="255.0" y="239.0"></omgdi:waypoint>
+        <omgdi:waypoint x="290.0" y="239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow13" id="BPMNEdge_flow13">
+        <omgdi:waypoint x="395.0" y="239.0"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
+        <omgdi:waypoint x="545.0" y="239.0"></omgdi:waypoint>
+        <omgdi:waypoint x="590.0" y="239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
+        <omgdi:waypoint x="695.0" y="239.0"></omgdi:waypoint>
+        <omgdi:waypoint x="760.0" y="239.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
+        <omgdi:waypoint x="812.0" y="267.0"></omgdi:waypoint>
+        <omgdi:waypoint x="808.0" y="279.0"></omgdi:waypoint>
+        <omgdi:waypoint x="458.0" y="279.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="279.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="310.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
+        <omgdi:waypoint x="193.0" y="337.0"></omgdi:waypoint>
+        <omgdi:waypoint x="228.0" y="337.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
+        <omgdi:waypoint x="333.0" y="337.0"></omgdi:waypoint>
+        <omgdi:waypoint x="378.0" y="337.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="483.0" y="337.0"></omgdi:waypoint>
+        <omgdi:waypoint x="528.0" y="337.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="633.0" y="337.0"></omgdi:waypoint>
+        <omgdi:waypoint x="708.0" y="337.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow21" id="BPMNEdge_flow21">
+        <omgdi:waypoint x="813.0" y="337.0"></omgdi:waypoint>
+        <omgdi:waypoint x="848.0" y="337.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
+        <omgdi:waypoint x="165.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="201.0" y="52.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
