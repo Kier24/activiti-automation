@@ -20,7 +20,12 @@ public class ProcessMCIncomingDelegate implements JavaDelegate {
 		ImagePath.add(ActivitiTestApplication.class.getCanonicalName() + "/images");
 		
 		Screen screen = new Screen();
-		screen.click("show_desktop.png");
+		screen.doubleClick("postman_icon.png");
+		screen.wait("postman_window.png", 120);
+		screen.click("postman_send.png");
+		screen.wait("postman_sending.png", 120);
+		screen.wait("postman_send.png", 120);
+		screen.click("close.png");		
 	}
 
 }

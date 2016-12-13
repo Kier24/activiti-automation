@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="daily_batch" name="Daily Batch Automation" isExecutable="true">
+  <process id="dailyBatch" name="Daily Batch Automation" isExecutable="true">
     <serviceTask id="reports" name="Reports" activiti:async="true" activiti:delegateExpression="${reportsDelegate}"></serviceTask>
     <serviceTask id="downloadEPFile" name="VISA Incoming / Download EP File" activiti:async="true" activiti:class="com.smi.efs.activiti.delegate.DownloadVISAIncomingDelegate"></serviceTask>
     <serviceTask id="incomingEditRun" name="VISA Incoming / Incoming Edit Run" activiti:class="com.smi.efs.activiti.delegate.IncomingEditRunDelegate"></serviceTask>
@@ -21,7 +21,11 @@
     <serviceTask id="uploadR111" name="R111 Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadR111Delegate"></serviceTask>
     <serviceTask id="uploadEPBIIOUT" name="EPBIIOUT Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadEPBIIOUTDelegate"></serviceTask>
     <serviceTask id="processBOSSettlementReports" name="BOS Settlement Reports" activiti:class="com.smi.efs.activiti.delegate.ProcessBOSSettlementReportsDelegate"></serviceTask>
-    <endEvent id="endevent1" name="End"></endEvent>
+    <endEvent id="endevent1" name="End">
+      <extensionElements>
+        <activiti:executionListener event="end" expression="${processEngine.close()}"></activiti:executionListener>
+      </extensionElements>
+    </endEvent>
     <sequenceFlow id="flow2" sourceRef="reports" targetRef="downloadEPFile"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="downloadEPFile" targetRef="incomingEditRun"></sequenceFlow>
     <sequenceFlow id="flow4" sourceRef="incomingEditRun" targetRef="extractBINAndARDEF"></sequenceFlow>
@@ -42,15 +46,11 @@
     <sequenceFlow id="flow19" sourceRef="uploadR111" targetRef="uploadEPBIIOUT"></sequenceFlow>
     <sequenceFlow id="flow20" sourceRef="uploadEPBIIOUT" targetRef="processBOSSettlementReports"></sequenceFlow>
     <sequenceFlow id="flow21" sourceRef="processBOSSettlementReports" targetRef="endevent1"></sequenceFlow>
-    <startEvent id="start" name="Timer start" activiti:async="true">
-      <timerEventDefinition>
-        <timeCycle>0 * * * * ?</timeCycle>
-      </timerEventDefinition>
-    </startEvent>
-    <sequenceFlow id="flow22" sourceRef="start" targetRef="reports"></sequenceFlow>
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <sequenceFlow id="flow22" sourceRef="startevent1" targetRef="reports"></sequenceFlow>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_daily_batch">
-    <bpmndi:BPMNPlane bpmnElement="daily_batch" id="BPMNPlane_daily_batch">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_dailyBatch">
+    <bpmndi:BPMNPlane bpmnElement="dailyBatch" id="BPMNPlane_dailyBatch">
       <bpmndi:BPMNShape bpmnElement="reports" id="BPMNShape_reports">
         <omgdc:Bounds height="65.0" width="105.0" x="201.0" y="20.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -114,8 +114,8 @@
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="848.0" y="320.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="35.0" width="35.0" x="130.0" y="35.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="110.0" y="35.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
         <omgdi:waypoint x="306.0" y="52.0"></omgdi:waypoint>
@@ -207,7 +207,7 @@
         <omgdi:waypoint x="848.0" y="337.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22">
-        <omgdi:waypoint x="165.0" y="52.0"></omgdi:waypoint>
+        <omgdi:waypoint x="145.0" y="52.0"></omgdi:waypoint>
         <omgdi:waypoint x="201.0" y="52.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
