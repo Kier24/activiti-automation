@@ -26,5 +26,9 @@ public class ScriptRunnerService {
 
 		LOGGER.info("Script finished processing.");
 		LOGGER.info("Exit value: " + spawn.getExitValue());
+		
+		if (spawn.getExitValue() != 0){
+			throw new RuntimeException("Script " + script + " failed to process.");
+		}
 	}
 }

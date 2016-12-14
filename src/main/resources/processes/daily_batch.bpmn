@@ -15,7 +15,7 @@
     <serviceTask id="createDCF" name="DCF / TS10" activiti:class="com.smi.efs.activiti.delegate.CreateDCFDelegate"></serviceTask>
     <serviceTask id="createEPOS" name="Merch Batch EPOS" activiti:class="com.smi.efs.activiti.delegate.CreateEPOSDelegate"></serviceTask>
     <serviceTask id="runDailyBatch" name="Daily Batch" activiti:class="com.smi.efs.activiti.delegate.RunDailyBatchDelegate"></serviceTask>
-    <serviceTask id="createMCOutgoing" name="MC Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateMCOutgoingDelegate"></serviceTask>
+    <serviceTask id="createMCOutgoing" name="MC Outgoing" activiti:delegateExpression="${createMCOutgoingDelegate}"></serviceTask>
     <serviceTask id="runR111Editor" name="R111 Editor" activiti:class="com.smi.efs.activiti.delegate.RunR111EditorDelegate"></serviceTask>
     <serviceTask id="createVISAOutgoing" name="VISA Outgoing" activiti:class="com.smi.efs.activiti.delegate.CreateVISAOutgoingDelegate"></serviceTask>
     <serviceTask id="uploadR111" name="R111 Uploading" activiti:class="com.smi.efs.activiti.delegate.UploadR111Delegate"></serviceTask>
